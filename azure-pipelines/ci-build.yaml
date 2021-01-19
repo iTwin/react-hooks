@@ -1,0 +1,26 @@
+trigger:
+- release/*
+
+pool:
+  name: iModelTechCI
+
+steps:
+- checkout: self
+  clean: true
+- task: NodeTool@0
+  displayName: "install Node 10.16.x"
+  inputs:
+    versionSpec: "10.16.x"
+    checkLatest: true
+- task: npmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+- script: npm install --production
+  displayName: 'install package dependencies'
+- script: npm install --save-dev webpack webpack-cli
+  displayName: 'install packages required to perform build'
+- script: npm run build:bundle
+  displayName: 'build bundle'
+- script: npm publish
+  displayName: 'publish'
+

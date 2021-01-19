@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["DOM", "DOM.Iterable", "ScriptHost", "ES2015"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./lib",
+    "downlevelIteration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["lib", "build", "node_modules"]
+}
