@@ -8,7 +8,9 @@ import { useEffect, useMemo, useRef } from "react";
 /** perform code on mount, executing in render order, which
  * effects cannot do.
  */
-export function useOnMountInRenderOrder(effect: () => void | (() => void)) {
+export function useOnMountInRenderOrder(
+  effect: () => void | (() => void)
+): void {
   const mounted = useRef(false);
   const cleanup = useRef<() => void>();
 
@@ -24,17 +26,17 @@ export function useOnMountInRenderOrder(effect: () => void | (() => void)) {
 }
 
 /** run code on component mount */
-export function useOnMount(impl: () => void) {
+export function useOnMount(impl: () => void): void {
   useEffect(() => void impl(), []);
 }
 
 /** run something on component unmount */
-export function useOnUnmount(impl: () => void) {
+export function useOnUnmount(impl: () => void): void {
   useEffect(() => () => impl(), []);
 }
 
 /** create a stable object reference on intialization */
-export function useStable<T>(make: () => T) {
+export function useStable<T>(make: () => T): T {
   // can't use memo since it's only for expensive computations, react will (eventually)
   // selectively recreate the object breaking the contract.
   const value = useMemo(make, []);
@@ -63,7 +65,7 @@ export function useStable<T>(make: () => T) {
  *   useErrorOnUnstableShape({a: 1, b: 1, c: 2});
  *   // error thrown (key added)
  */
-export function useErrorOnUnstableShape<T extends {}>(
+export function useErrorOnUnstableShape<T extends Record<string, unknown>>(
   object: T,
   consumerName = "useErrorOnUnstableShape"
 ): void {

@@ -6,7 +6,7 @@ import React from "react";
  * @param callback - The callback function.
  * @param delay - How often (in msec) to call the callback function, or null to stop calling it.
  */
-export function useInterval(callback: () => void, delay: number | null) {
+export function useInterval(callback: () => void, delay: number | null): void {
   const savedCallback = React.useRef<() => void | null>();
   // Remember the latest callback.
   React.useEffect(() => {
@@ -23,6 +23,7 @@ export function useInterval(callback: () => void, delay: number | null) {
       const id = setInterval(tick, delay);
       return () => clearInterval(id);
     }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     return () => {};
   }, [delay]);
 }

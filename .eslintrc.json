@@ -30,7 +30,9 @@
     "react/display-name": "off",
     "react/prop-types": "off",
     "@typescript-eslint/interface-name-prefix": "off",
-    "no-unused-vars": [1, { "ignoreRestSiblings": true }]
+    "no-unused-vars": [1, { "ignoreRestSiblings": true }],
+    "react-hooks/exhaustive-deps": "warn", // this might be worth disabling autofix on
+    "@typescript-eslint/forbidden-non-null-assertion": "off"
   },
   "overrides": [
     {

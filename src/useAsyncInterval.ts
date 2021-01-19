@@ -23,12 +23,14 @@ type CancellationFunc = () => void;
  * }, 1000);
  */
 export const useAsyncInterval = (
+  // eslint-disable-next-line no-unused-vars
   effect: (util: {
     isStale: () => boolean;
+    // eslint-disable-next-line no-unused-vars
     setCancel: (cancel: CancellationFunc) => void;
   }) => void | Promise<void>,
   interval: number | null
-) => {
+): Promise<void> => {
   const lastCancel = useRef<CancellationFunc>();
   const isStale = useRef(true);
   return new Promise<void>((resolve, reject) =>

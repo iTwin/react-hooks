@@ -35,40 +35,40 @@ type CancellationFunc = () => void;
  * @example
  */
 export const useAsyncEffect = (
+  // FIXME: this looks like an eslint/no-unused-vars bug that the callback parameter is marked a parameter, report it
+  // eslint-disable-next-line no-unused-vars
   effect: (util: {
     isStale: () => boolean;
+    // eslint-disable-next-line no-unused-vars
     setCancel: (cancel: CancellationFunc) => void;
   }) => void | Promise<void>,
   deps?: React.DependencyList
-) => {
+): Promise<void> => {
   return new Promise<void>((resolve, reject) =>
-    useEffect(
-      () => {
-        let isStale = false;
-        let onCancel: CancellationFunc | undefined;
-        const result = effect({
-          isStale: () => isStale,
-          setCancel: (inCancelFunc: CancellationFunc) =>
-            void (onCancel = inCancelFunc),
-        });
-        if (result !== undefined) {
-          result
-            .then(() => {
-              onCancel = undefined;
-              resolve();
-            })
-            .catch(reject);
-        } else {
-          resolve();
-        }
-        return () => {
-          isStale = true;
-          onCancel?.();
-        };
-      },
+    useEffect(() => {
+      let isStale = false;
+      let onCancel: CancellationFunc | undefined;
+      const result = effect({
+        isStale: () => isStale,
+        setCancel: (inCancelFunc: CancellationFunc) =>
+          void (onCancel = inCancelFunc),
+      });
+      if (result !== undefined) {
+        result
+          .then(() => {
+            onCancel = undefined;
+            resolve();
+          })
+          .catch(reject);
+      } else {
+        resolve();
+      }
+      return () => {
+        isStale = true;
+        onCancel?.();
+      };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      deps
-    )
+    }, deps)
   );
 };
 

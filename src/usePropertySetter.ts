@@ -18,10 +18,14 @@ const isAction = <State extends {}>(arg: any): arg is (prev: State) => State =>
  * const setA = usePropertySetter("a", setState);
  * setA("c");
  */
-export const usePropertySetter = <State extends {}, Key extends keyof State>(
+export const usePropertySetter = <
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  State extends object,
+  Key extends keyof State
+>(
   key: Key,
   setState: ReactHookState<State>[1]
-) =>
+): ReactHookState<State[Key]>[1] =>
   // useRef over useCallback to prevent checking
   React.useRef((...[arg]: Parameters<ReactHookState<State[Key]>[1]>) =>
     setState((prev) => {

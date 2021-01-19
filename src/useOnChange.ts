@@ -29,9 +29,11 @@ import useAsyncEffect from "./useAsyncEffect";
  * @param validRunCondition condition that must be satisfied for the effect to run
  */
 export default function useOnChange<States extends readonly any[]>(
+  // eslint-disable-next-line no-unused-vars
   effect: (util: {
     prev: Partial<States>;
     isStale: () => boolean;
+    // eslint-disable-next-line no-unused-vars
     setCancel: (cancel: () => void) => void;
   }) => void | Promise<void>,
   rerunStates: States,

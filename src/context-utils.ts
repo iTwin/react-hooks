@@ -7,7 +7,7 @@ import React from "react";
  */
 export const makeContextWithProviderRequired = <T extends any>(
   name = "UntitledContext"
-) =>
+): React.Context<T> =>
   React.createContext<T>(
     new Proxy(
       {},
