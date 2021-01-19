@@ -9,7 +9,7 @@
   "parserOptions": {
     "ecmaVersion": 7,
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": ["./tsconfig.json", "./tsconfig.test.json"]
   },
   "settings": {
     "import/resolver": {
@@ -31,5 +31,13 @@
     "react/prop-types": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "no-unused-vars": [1, { "ignoreRestSiblings": true }]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
 }

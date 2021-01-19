@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "moduleResolution": "node",
+    "lib": ["DOM", "DOM.Iterable", "ScriptHost", "ES2015"],
+    "downlevelIteration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "jsx": "react"
+  },
+  "include": ["./src/**/*.test.ts", "./src/**/*.test.tsx"],
+  "exclude": ["lib", "build", "node_modules"]
+}
