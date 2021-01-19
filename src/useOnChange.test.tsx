@@ -22,6 +22,7 @@ describe("useOnChange()", () => {
     render(<TestComp />);
     expect(effect).toBeCalledTimes(1);
 
+    // TODO: avoid using nextTick/setImmediate/setTimeout(*, 0),
     act(() => setVal(1));
     await new Promise((resolve) => setTimeout(resolve, 0));
 
