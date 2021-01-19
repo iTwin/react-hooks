@@ -1,10 +1,11 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { mount } from "enzyme";
 import React from "react";
+import { render } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
+
 import useAsyncInterval from "./useAsyncInterval";
-import { ReactHookState } from "../utils/react-context";
+import { ReactHookState } from "./react-type-utils";
 
 const TINY_INTERVAL = 10;
 
@@ -27,7 +28,7 @@ describe("useAsyncInterval()", () => {
       }, interval);
       return null;
     }
-    mount(<TestComp />);
+    render(<TestComp />);
 
     jest.runAllTimers();
 
@@ -36,7 +37,7 @@ describe("useAsyncInterval()", () => {
 
   it("cleans up previous interval right before current", () => {
     const effect = jest.fn(async () => {
-      await new Promise(resolve => setTimeout(resolve, TINY_INTERVAL * 2)); // wait enough to be cleaned up
+      await new Promise((resolve) => setTimeout(resolve, TINY_INTERVAL * 2)); // wait enough to be cleaned up
     });
     const cancel = jest.fn(() => {
       // should not be called for first time
@@ -49,7 +50,7 @@ describe("useAsyncInterval()", () => {
       }, TINY_INTERVAL);
       return null;
     }
-    const wrapper = mount(<TestComp />);
+    const wrapper = render(<TestComp />);
 
     jest.advanceTimersByTime(TINY_INTERVAL - 1);
 
@@ -65,8 +66,6 @@ describe("useAsyncInterval()", () => {
 
     expect(cancel).toBeCalledTimes(1);
     expect(effect).toBeCalledTimes(2);
-
-    wrapper.unmount();
   });
 
   it("reruns forever unless null", () => {
@@ -79,7 +78,7 @@ describe("useAsyncInterval()", () => {
       }, interval);
       return null;
     }
-    mount(<TestComp />);
+    render(<TestComp />);
 
     const EXPECTED_TIMES = 3;
 
@@ -89,7 +88,10 @@ describe("useAsyncInterval()", () => {
   });
 
   it("stops running when interval becomes null", () => {
-    let [interval, setInterval]: ReactHookState<number | null> = [TINY_INTERVAL, jest.fn()];
+    let [interval, setInterval]: ReactHookState<number | null> = [
+      TINY_INTERVAL,
+      jest.fn(),
+    ];
     const effect = jest.fn();
     function TestComp() {
       [interval, setInterval] = React.useState<number | null>(TINY_INTERVAL);
@@ -98,7 +100,7 @@ describe("useAsyncInterval()", () => {
       }, interval);
       return null;
     }
-    mount(<TestComp />);
+    render(<TestComp />);
 
     jest.advanceTimersByTime(TINY_INTERVAL);
 
@@ -113,7 +115,10 @@ describe("useAsyncInterval()", () => {
   });
 
   it("restarts running when interval becomes non-null", () => {
-    let [interval, setInterval]: ReactHookState<number | null> = [null, jest.fn()];
+    let [interval, setInterval]: ReactHookState<number | null> = [
+      null,
+      jest.fn(),
+    ];
     const effect = jest.fn();
     function TestComp() {
       [interval, setInterval] = React.useState<number | null>(null);
@@ -122,7 +127,7 @@ describe("useAsyncInterval()", () => {
       }, interval);
       return null;
     }
-    mount(<TestComp />);
+    render(<TestComp />);
 
     jest.advanceTimersByTime(TINY_INTERVAL);
 

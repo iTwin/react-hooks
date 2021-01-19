@@ -11,8 +11,14 @@
     "downlevelIteration": true,
     "strict": true,
     "esModuleInterop": true,
-    "jsx": "react",
+    "jsx": "react"
   },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["lib", "build", "node_modules"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
+  "exclude": [
+    "lib",
+    "build",
+    "node_modules",
+    "./src/**/*.test.ts",
+    "./src/**/*.test.tsx"
+  ]
 }
