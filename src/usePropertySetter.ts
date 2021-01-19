@@ -1,6 +1,6 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 import React from "react";
-import { ReactHookState } from "../utils/react-context";
+import { ReactHookState } from "./react-type-utils";
 
 // only necessary because typescript doesn't know how to identify a callable type
 // from the optional call operator `?.()`
@@ -20,14 +20,16 @@ const isAction = <State extends {}>(arg: any): arg is (prev: State) => State =>
  */
 export const usePropertySetter = <State extends {}, Key extends keyof State>(
   key: Key,
-  setState: ReactHookState<State>[1],
+  setState: ReactHookState<State>[1]
 ) =>
   // useRef over useCallback to prevent checking
   React.useRef((...[arg]: Parameters<ReactHookState<State[Key]>[1]>) =>
-    setState(prev => {
-      const nextPropertyState = isAction<State[Key]>(arg) ? arg(prev[key]) : arg;
+    setState((prev) => {
+      const nextPropertyState = isAction<State[Key]>(arg)
+        ? arg(prev[key])
+        : arg;
       return { ...prev, [key]: nextPropertyState };
-    }),
+    })
   ).current;
 
 export default usePropertySetter;
