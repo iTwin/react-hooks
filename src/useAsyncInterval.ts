@@ -7,7 +7,8 @@ type CancellationFunc = () => void;
 /**
  * @description
  * useInterval but with support for async functions and utilities like useAsyncEffect
- * the async cancel/cleanup occurs directly before the replacing effect is about to start
+ * the async cancel/cleanup occurs directly before the replacing effect is about to start.
+ * To handle errors you may catch the return value of the effect.
  *
  * @warn
  * it's possible that a previous cancelled effect run could have a section that sets state
@@ -26,31 +27,33 @@ export const useAsyncInterval = (
     isStale: () => boolean;
     setCancel: (cancel: CancellationFunc) => void;
   }) => void | Promise<void>,
-  handleErr: (err: unknown) => void,
-  interval: number | null,
+  interval: number | null
 ) => {
   const lastCancel = useRef<CancellationFunc>();
   const isStale = useRef(true);
-  useInterval(() => {
-    lastCancel.current?.();
-    const result = effect({
-      isStale: () => isStale.current,
-      setCancel: (inCancelFunc: CancellationFunc) => {
-        lastCancel.current = () => {
-          inCancelFunc();
-          isStale.current = true;
-        };
-      },
-    });
-    if (result) {
-      result
-        .then(() => {
-          lastCancel.current = undefined;
-          isStale.current = false;
-        })
-        .catch(handleErr);
-    }
-  }, interval);
+  return new Promise<void>((resolve, reject) =>
+    useInterval(() => {
+      lastCancel.current?.();
+      const result = effect({
+        isStale: () => isStale.current,
+        setCancel: (inCancelFunc: CancellationFunc) => {
+          lastCancel.current = () => {
+            inCancelFunc();
+            isStale.current = true;
+          };
+        },
+      });
+      if (result) {
+        result
+          .then(() => {
+            lastCancel.current = undefined;
+            isStale.current = false;
+            resolve();
+          })
+          .catch(reject);
+      }
+    }, interval)
+  );
 };
 
 export default useAsyncInterval;

@@ -6,9 +6,9 @@ import useAsyncEffect from "./useAsyncEffect";
 /**
  * useOnChange, a hook for a common effect pattern
  *
- * @description Sometimes you want an effect to run exactly when some state changes, but doing this with a normal effect
- * can be a trap, since when that state changes, another dependency may be invalid, so you need to wait for
- * all dependencies to be valid, and _then_ execute the effect, knowing that the state changed before. This hook
+ * @description Sometimes you want an effect to run exactly when some state changes, but you might rely on
+ * state that isn't valid yet. So you need to wait for all dependencies to be valid, and only _then_ execute
+ * the effect, having stored that the state changed before. This hook
  * encapsulates the pattern of running an effect on a state change, and will wait for all dependencies
  * to be valid before actually running the pending effect.
  *
@@ -20,7 +20,7 @@ import useAsyncEffect from "./useAsyncEffect";
  *   async (isStale, setCancel) => {
  *     if (isPollingForUploadState && !isStale()) await poll(modelDomainName, setCancel);
  *   },
- *   [tickNumber],
+ *   [tickNumber], // whenever tickNumber changes, rerun the effect provided the modelDomainName is valid
  *   !!modelDomainName,
  * );
  *
@@ -35,8 +35,8 @@ export default function useOnChange<States extends readonly any[]>(
     setCancel: (cancel: () => void) => void;
   }) => void | Promise<void>,
   rerunStates: States,
-  validRunCondition = true,
-) {
+  validRunCondition = true
+): Promise<void> {
   const ran = useRef(false);
   const lastStates = useRef<States>();
   const haveStatesChanged =
@@ -45,16 +45,14 @@ export default function useOnChange<States extends readonly any[]>(
     rerunStates?.some((_, i) => rerunStates[i] !== lastStates.current?.[i]);
   if (haveStatesChanged) ran.current = false;
   const prev =
-    lastStates.current ?? (new Array(rerunStates.length).fill(undefined) as Partial<States>);
-  useAsyncEffect(async (...useAsyncArgs) => {
+    lastStates.current ??
+    ((new Array(rerunStates.length).fill(undefined) as any) as Partial<States>);
+  const result = useAsyncEffect(async (...[utils]) => {
     if (validRunCondition && !ran.current) {
       ran.current = true;
-      await effect({
-        prev,
-        isStale: useAsyncArgs[0],
-        setCancel: useAsyncArgs[1],
-      });
+      await effect({ prev, ...utils });
     }
   });
   lastStates.current = rerunStates;
+  return result;
 }
