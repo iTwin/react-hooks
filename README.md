@@ -1,6 +1,6 @@
 # @bentley/react-hooks
 
-[![Build Status](https://dev.azure.com/bentleycs/iModelTechnologies/_apis/build/status/imodeljs.react-hooks?branchName=release%2Ftest-bad-tests)](https://dev.azure.com/bentleycs/iModelTechnologies/_build/latest?definitionId=4718&branchName=release%2Ftest-bad-tests)
+[![Build Status](https://dev.azure.com/bentleycs/iModelTechnologies/_apis/build/status/imodeljs.react-hooks)](https://dev.azure.com/bentleycs/iModelTechnologies/_build/latest?definitionId=4718)
 
 Generic React hooks for daily development.
 
