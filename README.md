@@ -11,8 +11,11 @@ Generic React hooks for daily development.
 - **useInterval**: the classic, run an effect every `n` milliseconds
 - **useAsyncInterval**: `useInterval` but with the same API for async effects as `useAsyncEffect`
 - **usePropertySetter**: for when you have an object in state but want a setter of its subproperty. Supports thunks (`prev=>next` callbacks) and regular state
+- **useValidatedInput**: useState for strings that are parsed into some other type (i.e. parsing a number input).
+- **useMediaQuery**: react a media query (e.g. screen size > 400px?)
+- **useScrolling**: react if your component is currently being scrolled through
 
-use only if you know what you're doing:
+use sparingly:
 - **useInlineComponent**
 - **useOnMount**
 - **useOnUnmount**
