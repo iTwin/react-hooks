@@ -12,3 +12,4 @@ export { default as useInterval } from "./useInterval";
 export { default as useOnChange } from "./useOnChange";
 export { default as usePropertySetter } from "./usePropertySetter";
 export { default as useValidatedInput } from "./useValidatedInput";
+export * from "./html-hooks";
