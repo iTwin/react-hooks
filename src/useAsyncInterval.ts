@@ -23,10 +23,8 @@ type CancellationFunc = () => void;
  * }, 1000);
  */
 export const useAsyncInterval = (
-  // eslint-disable-next-line no-unused-vars
   effect: (util: {
     isStale: () => boolean;
-    // eslint-disable-next-line no-unused-vars
     setCancel: (cancel: CancellationFunc) => void;
   }) => void | Promise<void>,
   interval: number | null
@@ -34,6 +32,9 @@ export const useAsyncInterval = (
   const lastCancel = useRef<CancellationFunc>();
   const isStale = useRef(true);
   return new Promise<void>((resolve, reject) =>
+    // Promise constructor synchronously invokes this callback,
+    // so this useEffect call follows the rules of hooks (static invocation)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useInterval(() => {
       lastCancel.current?.();
       const result = effect({

@@ -14,7 +14,7 @@ describe("useOnChange()", () => {
     function TestComp() {
       let val: number;
       [val, setVal] = React.useState(0);
-      useOnChange(() => {
+      void useOnChange(() => {
         effect();
       }, [val]);
       return null;
@@ -33,10 +33,10 @@ describe("useOnChange()", () => {
     let setDep: ReactHookState<number>[1];
     const effect = jest.fn();
     function TestComp() {
-      const [a, _setA] = React.useState(0);
+      const [a] = React.useState(0);
       let dep: number;
       [dep, setDep] = React.useState(0);
-      useOnChange(() => {
+      void useOnChange(() => {
         effect();
       }, [a]);
       return null;
@@ -51,16 +51,15 @@ describe("useOnChange()", () => {
   });
 
   it("only rerun if deps are valid", async () => {
-    let setDepA: ReactHookState<boolean>[1];
     let setDepB: ReactHookState<boolean>[1];
     let setListened: ReactHookState<number>[1];
     const effect = jest.fn();
     function TestComp() {
-      let depA: boolean, depB: boolean, listened: number;
-      [depA, setDepA] = React.useState<boolean>(true);
+      let depB: boolean, listened: number;
+      const [depA] = React.useState<boolean>(true);
       [depB, setDepB] = React.useState<boolean>(false);
       [listened, setListened] = React.useState<number>(0);
-      useOnChange(
+      void useOnChange(
         () => {
           effect();
         },

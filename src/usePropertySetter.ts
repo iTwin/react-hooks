@@ -2,10 +2,13 @@
 import React from "react";
 import { ReactHookState } from "./react-type-utils";
 
-// only necessary because typescript doesn't know how to identify a callable type
-// from the optional call operator `?.()`
-const isAction = <State extends {}>(arg: any): arg is (prev: State) => State =>
-  typeof arg === "function";
+// would be nicer if typescript could use the optional call `?.()` operator on any type
+// and realize it is a function
+export function isAction<State extends any>(
+  arg: State | ((prev: State) => State)
+): arg is (prev: State) => State {
+  return typeof arg === "function";
+}
 
 /**
  * given a key and a react setState dispatcher returned from useState,
@@ -26,7 +29,7 @@ export const usePropertySetter = <
   key: Key,
   setState: ReactHookState<State>[1]
 ): ReactHookState<State[Key]>[1] =>
-  // useRef over useCallback to prevent checking
+  // useRef over useCallback to prevent overhead
   React.useRef((...[arg]: Parameters<ReactHookState<State[Key]>[1]>) =>
     setState((prev) => {
       const nextPropertyState = isAction<State[Key]>(arg)

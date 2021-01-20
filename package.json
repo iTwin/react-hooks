@@ -9,7 +9,7 @@
     "build:watch": "tsc -b -w",
     "test": "jest",
     "lint:all": "eslint --ext .js,.ts,.tsx src",
-    "lint:fix:all": "eslint --ext .js,.ts,.tsx,.test.tsx,.test.ts --fix src",
+    "lint:fix:all": "eslint --ext .js,.ts,.tsx,.test.tsx,.test.ts --fix src --config \"./.eslintrc.autofix.jsonc\"",
     "format:all": "prettier --write src"
   },
   "repository": {
@@ -54,7 +54,7 @@
   "lint-staged": {
     "*.{js,json,jsx,ts,tsx,md}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix --config './.eslintrc.autofix.jsonc'"
     ]
   }
 }

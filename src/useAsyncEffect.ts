@@ -11,7 +11,8 @@ type CancellationFunc = () => void;
  * cleanup or your dependencies include things upon which you shouldn't cancel, use a raw effect
  *
  * It will return a promise forwarding any result of the async effect you passed, so you
- * can catch the result of the effect to catch errors in the effect itself
+ * can catch the result of the effect to catch errors in the effect itself. You should not await this
+ * (your component render can't be an async function anyway)
  * @example
  * useAsyncEffect(
  *   async () => { throw Error("boom!") }
@@ -35,16 +36,16 @@ type CancellationFunc = () => void;
  * @example
  */
 export const useAsyncEffect = (
-  // FIXME: this looks like an eslint/no-unused-vars bug that the callback parameter is marked a parameter, report it
-  // eslint-disable-next-line no-unused-vars
   effect: (util: {
     isStale: () => boolean;
-    // eslint-disable-next-line no-unused-vars
     setCancel: (cancel: CancellationFunc) => void;
   }) => void | Promise<void>,
   deps?: React.DependencyList
 ): Promise<void> => {
   return new Promise<void>((resolve, reject) =>
+    // Promise constructor synchronously invokes this callback,
+    // so this useEffect call follows the rules of hooks (static invocation)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       let isStale = false;
       let onCancel: CancellationFunc | undefined;

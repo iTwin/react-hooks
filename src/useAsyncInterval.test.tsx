@@ -23,7 +23,7 @@ describe("useAsyncInterval()", () => {
     const effect = jest.fn();
     function TestComp() {
       [interval] = React.useState<number | null>(null);
-      useAsyncInterval(() => {
+      void useAsyncInterval(() => {
         effect();
       }, interval);
       return null;
@@ -44,13 +44,13 @@ describe("useAsyncInterval()", () => {
       expect(effect).toBeCalledTimes(1);
     });
     function TestComp() {
-      useAsyncInterval(async ({ setCancel }) => {
+      void useAsyncInterval(async ({ setCancel }) => {
         setCancel(cancel);
         await effect();
       }, TINY_INTERVAL);
       return null;
     }
-    const wrapper = render(<TestComp />);
+    render(<TestComp />);
 
     jest.advanceTimersByTime(TINY_INTERVAL - 1);
 
@@ -73,7 +73,7 @@ describe("useAsyncInterval()", () => {
     const effect = jest.fn();
     function TestComp() {
       [interval] = React.useState<number | null>(TINY_INTERVAL);
-      useAsyncInterval(() => {
+      void useAsyncInterval(() => {
         effect();
       }, interval);
       return null;
@@ -95,7 +95,7 @@ describe("useAsyncInterval()", () => {
     const effect = jest.fn();
     function TestComp() {
       [interval, setInterval] = React.useState<number | null>(TINY_INTERVAL);
-      useAsyncInterval(() => {
+      void useAsyncInterval(() => {
         effect();
       }, interval);
       return null;
@@ -122,7 +122,7 @@ describe("useAsyncInterval()", () => {
     const effect = jest.fn();
     function TestComp() {
       [interval, setInterval] = React.useState<number | null>(null);
-      useAsyncInterval(() => {
+      void useAsyncInterval(() => {
         effect();
       }, interval);
       return null;

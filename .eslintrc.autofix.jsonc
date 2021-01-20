@@ -1,0 +1,7 @@
+{
+  "extends": ["./.eslintrc.json"],
+  // rules to ignore when autofixing via lint-staged config
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
+  }
+}

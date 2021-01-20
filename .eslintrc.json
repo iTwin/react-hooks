@@ -18,7 +18,7 @@
       }
     }
   },
-  "plugins": ["simple-import-sort", "@typescript-eslint"],
+  "plugins": ["simple-import-sort", "@typescript-eslint", "react-hooks"],
   "rules": {
     "no-console": "off",
     "import/prefer-default-export": "off",
@@ -29,10 +29,13 @@
     "react/no-unescaped-entities": "off",
     "react/display-name": "off",
     "react/prop-types": "off",
-    "@typescript-eslint/interface-name-prefix": "off",
-    "no-unused-vars": [1, { "ignoreRestSiblings": true }],
-    "react-hooks/exhaustive-deps": "warn", // this might be worth disabling autofix on
-    "@typescript-eslint/forbidden-non-null-assertion": "off"
+    "@typescript-eslint/no-unused-vars": [1, { "ignoreRestSiblings": true }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/prefer-optional-chain": "warn",
+    "@typescript-eslint/prefer-nullish-coalescing": "warn"
   },
   "overrides": [
     {
