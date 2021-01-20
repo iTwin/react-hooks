@@ -16,11 +16,14 @@ steps:
   inputs:
     workingFile: .npmrc
 - script: npm install --production
-  displayName: 'install package dependencies'
-- script: npm install --save-dev webpack webpack-cli
+  displayName: 'install build dependencies'
+- script: npm install --save-dev typescript@4.1.3
   displayName: 'install packages required to perform build'
-- script: npm run build:bundle
+- script: npm run build
   displayName: 'build bundle'
+# TODO: verify that broken tests will not publish
+- script: npm test
+  displayName: 'run tests'
 - script: npm publish
   displayName: 'publish'
 
