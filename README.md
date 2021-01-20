@@ -1,4 +1,4 @@
-# @bentley/React-hooks
+# @bentley/react-hooks
 
 Generic React hooks for daily development.
 
