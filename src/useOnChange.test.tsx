@@ -14,9 +14,8 @@ describe("useOnChange()", () => {
     function TestComp() {
       let val: number;
       [val, setVal] = React.useState(0);
-      void useOnChange(() => {
-        effect();
-      }, [val]);
+      // prettier-ignore
+      void useOnChange(() => { effect(); }, [val]);
       return null;
     }
     render(<TestComp />);
@@ -29,16 +28,15 @@ describe("useOnChange()", () => {
     expect(effect).toBeCalledTimes(2);
   });
 
-  it("doesn't rerun on dependency changes", async () => {
+  it("doesn't rerun on only dependency changes", async () => {
     let setDep: ReactHookState<number>[1];
     const effect = jest.fn();
     function TestComp() {
       const [a] = React.useState(0);
-      let dep: number;
+      let dep;
       [dep, setDep] = React.useState(0);
-      void useOnChange(() => {
-        effect();
-      }, [a]);
+      // prettier-ignore
+      void useOnChange(() => { effect(); }, dep === 0, [a, dep]);
       return null;
     }
     render(<TestComp />);
@@ -56,16 +54,11 @@ describe("useOnChange()", () => {
     const effect = jest.fn();
     function TestComp() {
       let depB: boolean, listened: number;
-      const [depA] = React.useState<boolean>(true);
-      [depB, setDepB] = React.useState<boolean>(false);
-      [listened, setListened] = React.useState<number>(0);
-      void useOnChange(
-        () => {
-          effect();
-        },
-        [listened],
-        depA && depB
-      );
+      const [depA] = React.useState(true);
+      [depB, setDepB] = React.useState<boolean>(false); // FIXME: false not implicitly widened to boolean
+      [listened, setListened] = React.useState(0);
+      // prettier-ignore
+      useOnChange(() => { effect(); }, depA && depB, [listened]);
       return null;
     }
     render(<TestComp />);
