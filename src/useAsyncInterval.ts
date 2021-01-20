@@ -22,13 +22,27 @@ type CancellationFunc = () => void;
  *   });
  * }, 1000);
  */
-export const useAsyncInterval = (
+export function useAsyncInterval(
+  effect: (util: {
+    isStale: () => boolean;
+    setCancel: (cancel: CancellationFunc) => void;
+  }) => Promise<void>,
+  interval: number | null
+): Promise<void>;
+export function useAsyncInterval(
+  effect: (util: {
+    isStale: () => boolean;
+    setCancel: (cancel: CancellationFunc) => void;
+  }) => void,
+  interval: number | null
+): void;
+export function useAsyncInterval(
   effect: (util: {
     isStale: () => boolean;
     setCancel: (cancel: CancellationFunc) => void;
   }) => void | Promise<void>,
   interval: number | null
-): Promise<void> => {
+): Promise<void> {
   const lastCancel = useRef<CancellationFunc>();
   const isStale = useRef(true);
   return new Promise<void>((resolve, reject) =>
@@ -57,6 +71,6 @@ export const useAsyncInterval = (
       }
     }, interval)
   );
-};
+}
 
 export default useAsyncInterval;

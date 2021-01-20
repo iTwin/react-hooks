@@ -35,13 +35,27 @@ type CancellationFunc = () => void;
  *
  * @example
  */
-export const useAsyncEffect = (
+export function useAsyncEffect(
+  effect: (util: {
+    isStale: () => boolean;
+    setCancel: (cancel: CancellationFunc) => void;
+  }) => void,
+  deps?: React.DependencyList
+): void;
+export function useAsyncEffect(
+  effect: (util: {
+    isStale: () => boolean;
+    setCancel: (cancel: CancellationFunc) => void;
+  }) => Promise<void>,
+  deps?: React.DependencyList
+): Promise<void>;
+export function useAsyncEffect(
   effect: (util: {
     isStale: () => boolean;
     setCancel: (cancel: CancellationFunc) => void;
   }) => void | Promise<void>,
   deps?: React.DependencyList
-): Promise<void> => {
+): void | Promise<void> {
   return new Promise<void>((resolve, reject) =>
     // Promise constructor synchronously invokes this callback,
     // so this useEffect call follows the rules of hooks (static invocation)
@@ -71,6 +85,6 @@ export const useAsyncEffect = (
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps)
   );
-};
+}
 
 export default useAsyncEffect;

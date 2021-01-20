@@ -33,10 +33,50 @@ export default function useOnChange<States extends readonly any[]>(
     prev: Partial<States>;
     isStale: () => boolean;
     setCancel: (cancel: () => void) => void;
+  }) => Promise<void>,
+  validRunCondition: boolean,
+  rerunStates: States
+): Promise<void>;
+// TODO: currently this is a 2x2 matrix of overloads, if it explodes, may
+// want to look into higher-level type unions
+export default function useOnChange<States extends readonly any[]>(
+  effect: (util: {
+    prev: Partial<States>;
+    isStale: () => boolean;
+    setCancel: (cancel: () => void) => void;
+  }) => void,
+  validRunCondition: boolean,
+  rerunStates: States
+): void;
+export default function useOnChange<States extends readonly any[]>(
+  effect: (util: {
+    prev: Partial<States>;
+    isStale: () => boolean;
+    setCancel: (cancel: () => void) => void;
+  }) => Promise<void>,
+  rerunStates: States
+): Promise<void>;
+export default function useOnChange<States extends readonly any[]>(
+  effect: (util: {
+    prev: Partial<States>;
+    isStale: () => boolean;
+    setCancel: (cancel: () => void) => void;
+  }) => void,
+  rerunStates: States
+): void;
+export default function useOnChange<States extends readonly any[]>(
+  effect: (util: {
+    prev: Partial<States>;
+    isStale: () => boolean;
+    setCancel: (cancel: () => void) => void;
   }) => void | Promise<void>,
-  rerunStates: States,
-  validRunCondition = true
+  validRunConditionOrRerunStates: boolean | States,
+  maybeRerunStates?: States
 ): Promise<void> {
+  const [validRunCondition, rerunStates] =
+    maybeRerunStates !== undefined
+      ? [validRunConditionOrRerunStates as boolean, maybeRerunStates]
+      : [true, validRunConditionOrRerunStates as States];
   const ran = useRef(false);
   const lastStates = useRef<States>();
   const haveStatesChanged =
