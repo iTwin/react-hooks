@@ -14,6 +14,7 @@ Generic React hooks for daily development.
 - **useValidatedInput**: useState for strings that are parsed into some other type (i.e. parsing a number input).
 - **useMediaQuery**: react a media query (e.g. screen size > 400px?)
 - **useScrolling**: react if your component is currently being scrolled through
+- **useHelp**: manage a contextual help link based on what components are currently rendering
 
 use sparingly:
 - **useInlineComponent**
