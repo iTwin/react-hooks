@@ -33,29 +33,18 @@ type CancellationFunc = () => void;
  *   if (!isStale()) setMyArray(result);
  * }, [id, somethingAsync]);
  *
- * @example
  */
-export function useAsyncEffect(
+// HACK: overloading was defaulting always to the void return overload,
+// so had to use generics to do this
+export function useAsyncEffect<T extends Promise<void> | void>(
   effect: (util: {
     isStale: () => boolean;
     setCancel: (cancel: CancellationFunc) => void;
-  }) => void,
+  }) => T,
   deps?: React.DependencyList
-): void;
-export function useAsyncEffect(
-  effect: (util: {
-    isStale: () => boolean;
-    setCancel: (cancel: CancellationFunc) => void;
-  }) => Promise<void>,
-  deps?: React.DependencyList
-): Promise<void>;
-export function useAsyncEffect(
-  effect: (util: {
-    isStale: () => boolean;
-    setCancel: (cancel: CancellationFunc) => void;
-  }) => void | Promise<void>,
-  deps?: React.DependencyList
-): void | Promise<void> {
+): T extends Promise<void> ? Promise<void> : void {
+  // it *always* returns a promise, but the promise can be safely ignored
+  // if the passed effect wasn't async, so I hide from typescript that it is returned
   return new Promise<void>((resolve, reject) =>
     // Promise constructor synchronously invokes this callback,
     // so this useEffect call follows the rules of hooks (static invocation)
@@ -68,7 +57,8 @@ export function useAsyncEffect(
         setCancel: (inCancelFunc: CancellationFunc) =>
           void (onCancel = inCancelFunc),
       });
-      if (result !== undefined) {
+      const isPromise = (a: any): a is Promise<void> => a !== undefined;
+      if (isPromise(result)) {
         result
           .then(() => {
             onCancel = undefined;
@@ -84,7 +74,7 @@ export function useAsyncEffect(
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps)
-  );
+  ) as any;
 }
 
 export default useAsyncEffect;

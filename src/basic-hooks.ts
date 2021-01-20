@@ -27,19 +27,27 @@ export function useOnMountInRenderOrder(
 
 /** run code on component mount */
 export function useOnMount(impl: () => void): void {
+  // empty deps makes it run when the component mounts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => void impl(), []);
 }
 
 /** run something on component unmount */
 export function useOnUnmount(impl: () => void): void {
+  // empty deps makes it run when the component mounts (and cleanup runs when it unmounts)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => impl(), []);
 }
 
-/** create a stable object reference on intialization */
+/** create a stable object reference on initialization */
 export function useStable<T>(make: () => T): T {
-  // can't use memo since it's only for expensive computations, react will (eventually)
-  // selectively recreate the object breaking the contract.
+  // our intention is to only call it once so the empty deps are on purpose,
+  // this is how useRef works anyway
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const value = useMemo(make, []);
+
+  // can't use just memo since it's only for expensive computations,
+  // react will (eventually) selectively recreate the object breaking the contract.
   return useRef(value).current;
 }
 

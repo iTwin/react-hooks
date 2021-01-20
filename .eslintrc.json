@@ -29,6 +29,7 @@
     "react/no-unescaped-entities": "off",
     "react/display-name": "off",
     "react/prop-types": "off",
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [1, { "ignoreRestSiblings": true }],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
@@ -42,6 +43,13 @@
       "files": ["**/*.test.ts", "**/*.test.tsx"],
       "env": {
         "jest": true
+      },
+      "rules": {
+        // unused variables
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { "varsIgnorePattern": "^testType" }
+        ]
       }
     }
   ]

@@ -4,7 +4,6 @@
   "description": "commonly reused generic react hooks for your react applications",
   "main": "lib/index.js",
   "scripts": {
-    "start": "serve -l 8000",
     "build": "tsc -b",
     "build:watch": "tsc -b -w",
     "test": "jest",
@@ -39,7 +38,6 @@
     "prettier": "^2.2.1",
     "react": "^16.13.0",
     "react-dom": "^17.0.1",
-    "serve": "^11.3.2",
     "ts-jest": "26.4.4",
     "typescript": "^4.1.3"
   },

@@ -40,11 +40,7 @@ export default function useOnChange<States extends readonly any[]>(
 // TODO: currently this is a 2x2 matrix of overloads, if it explodes, may
 // want to look into higher-level type unions
 export default function useOnChange<States extends readonly any[]>(
-  effect: (util: {
-    prev: Partial<States>;
-    isStale: () => boolean;
-    setCancel: (cancel: () => void) => void;
-  }) => void,
+  effect: (util: { prev: Partial<States> }) => void,
   validRunCondition: boolean,
   rerunStates: States
 ): void;
@@ -57,11 +53,7 @@ export default function useOnChange<States extends readonly any[]>(
   rerunStates: States
 ): Promise<void>;
 export default function useOnChange<States extends readonly any[]>(
-  effect: (util: {
-    prev: Partial<States>;
-    isStale: () => boolean;
-    setCancel: (cancel: () => void) => void;
-  }) => void,
+  effect: (util: { prev: Partial<States> }) => void,
   rerunStates: States
 ): void;
 export default function useOnChange<States extends readonly any[]>(
@@ -83,14 +75,17 @@ export default function useOnChange<States extends readonly any[]>(
     !lastStates.current ||
     rerunStates.length !== lastStates.current.length ||
     rerunStates?.some((_, i) => rerunStates[i] !== lastStates.current?.[i]);
+
   if (haveStatesChanged) ran.current = false;
+
   const prev =
     lastStates.current ??
     ((new Array(rerunStates.length).fill(undefined) as any) as Partial<States>);
-  const result = useAsyncEffect(async (...[utils]) => {
+
+  const result = useAsyncEffect(async (utils) => {
     if (validRunCondition && !ran.current) {
       ran.current = true;
-      await effect({ prev, ...utils });
+      void effect({ prev, ...utils });
     }
   });
   lastStates.current = rerunStates;
