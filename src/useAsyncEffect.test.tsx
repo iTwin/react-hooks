@@ -36,4 +36,8 @@ describe("useAsyncEffect()", () => {
     }
     render(<TestComp />);
   });
+
+  it("fails", () => {
+    expect(true).toBeFalsy();
+  });
 });
