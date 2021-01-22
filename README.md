@@ -38,19 +38,26 @@ Generic React hooks for daily development.
     }, []);
     return <MySubcomponent setArea={setArea} />;
     ```
-- **useValidatedInput**: useState for strings that are parsed into some other type (i.e. parsing a number input). By default parses numeric input:
+- **useValidatedInput**: useState for strings that are parsed into some other type (i.e. parsing a number input).
+  By default parses numeric input, but you can supply your own parse function, meaning you could handle search languages, SI units, lists, anything.
+  Returns an optional parse failure reason.
   ```tsx
-  // only allow positive integers
-  const [value, input, setInput] = useValidatedInput("5", {validate: (n: number) => /\d+/.test(n)});
+  const [value, input, setInput] = useValidatedInput("5", {
+    // don't change the numeric parsing but validate that it's a positive number
+    validate: (n: number) => {
+      const valid = /\d+/.test(n);
+      return { valid, status: !valid ? "only positive integers" : undefined };
+    })
+  });
   return <input value={input} onChange={e => setInput(e.currentTarget.value)} />;
   ```
 - **useMediaQuery**: react to a media query (e.g. screen size > 400px?)
 - **useScrolling**: react if your component is currently being scrolled through
 - **useHelp**: manage a contextual help link based on what components are currently rendering.
   Internally this has been used to link to articles in a Bentley Communities page, based on which pages and menus (their components) are open (mounted).
-- **useInlineComponent**
-- **useOnMount**
-- **useOnUnmount**
+- **useInlineComponent**: for tiny components
+- **useOnMount**: for directly saying you're doing something is first added to the dom
+- **useOnUnmount**: for directly saying you're doing something when the component is removed from the dom
 
 ## Tips
 
