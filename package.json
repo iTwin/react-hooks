@@ -1,6 +1,6 @@
 {
   "name": "@bentley/react-hooks",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "commonly reused generic react hooks for your react applications",
   "main": "lib/index.js",
   "scripts": {
