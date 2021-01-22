@@ -14,3 +14,4 @@ export { default as usePropertySetter } from "./usePropertySetter";
 export { default as useValidatedInput } from "./useValidatedInput";
 export { default as useOnExternalClick } from "./useOnExternalClick";
 export * from "./html-hooks";
+export * from "./useHelp";
