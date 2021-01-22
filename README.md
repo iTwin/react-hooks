@@ -7,7 +7,30 @@ Generic React hooks for daily development.
 ## Hooks
 
 - **useAsyncEffect**: like `useEffect` but you can pass an async function and check if the component restarted the effect during your async operation.
-  see [this article](https://blogs.bentley.com/2021/01/21/even-more-hooks-bentley-react-hooks-and-useasynceffect-for-animated-markers/)
+
+  ```tsx
+  useAsyncEffect(
+    async ({isStale, setCancel}) => {
+
+      const fetchPromise = fetch(`http://example.com/users/${userId}`);
+      // using setCancel, unfinished effect runs are cancelled by new runs
+      // this allows you to cancel requests you no longer need
+      setCancel(() => {
+        console.log("dependencies (userId) changed, cancelling old request!")
+        // your async API must have some kind of cancellation
+        // for example, the fetch API can use an AbortController
+        fetchPromise.cancel();
+      })
+      const data = await fetchPromise;
+      if (!isStale())
+        setState(data);
+    },
+    [userId]
+  ).catch(err => {
+    console.log("an error occurred!");
+    console.error(err);
+  });
+  ```
 - **useOnChange**: run an effect on a state change, but wait for some validity condition, any time you need to store a ref to previous state, consider this
   ```tsx
   const [activeType, setActiveType] = useState<string>();
@@ -76,74 +99,3 @@ Generic React hooks for daily development.
 To get `eslint-plugin-react-hooks` to warn on bad dependencies for hooks like
 `useAsyncEffect`, see the eslint rule's [advanced configuration docs](https://www.npmjs.com/package/eslint-plugin-react-hooks#advanced-configuration).
 Older versions of `eslint-plugin-react-hooks` may warn on passing an async argument, we have a PR in react's monorepo to fix that eslint rule, and we can maintain a trivial fork if this is a common issue, because not warning on missed effects almost always leads to bug.
-
-## `useAsyncEffect`
-
-Handle all the quirks of having async code in effects.
-No wrapping async functions, no quirky promise handling, prevent async state
-race conditions (cancel old async effects implicitly),
-prevent "tried to update state on an unmounted component" error.
-
-```tsx
-function MyComponent() {
-  useAsyncEffect(
-    async ({isStale, setCancel}) => {
-      const fetchPromise = myFetch(`http://example.com/users/${userId}`);
-      // using setCancel, unfinished effect runs are cancelled by new runs
-      // this allows you to cancel requests you no longer need
-      setCancel(() => {
-        console.log("dependencies (userId) changed, cancelling old request!")
-        // your async API must have some kind of cancellation
-        // for example, the axios ajax wrapper has one we have an example of
-        fetchPromise.cancel();
-      })
-      const data = await fetchPromise;
-      if (!isStale())
-        setState(data);
-    },
-    [userId]
-  ).catch(err => {
-    console.log("an error occurred!");
-    console.error(err);
-  });
-}
-```
-
-## `useOnChange`
-
-Run effects on changing state, and you can also provide validity conditions.
-Great when you have dependencies that need to be up to date but you only run
-the effect on one of them changing. Normally this is done with extra refs and gets
-really bad with multiple refs to check.
-
-```tsx
-function MyComponent() {
-  // suppose we're loading some intensive third party viewer
-  const {
-    viewerLoaded,
-    viewOrigin,
-    viewerElement
-  } = useContext(MyAppContext);
-
-  useOnChange(
-    () => {
-      viewerElement.setUserData(userId);
-    },
-    intensiveViewerLoaded && viewerElement !== undefined,
-    [userId]
-  );
-}
-```
-
-Or just use it to track previous state.
-
-```tsx
-function MyComponent() {
-  useOnChange(({prev}) => {
-    const [prevA, _prevB] = prev;
-    if (prevA === a) {
-      console.log("`a` didn't change so `b` must have!")
-    }
-  }, [a, b]);
-}
-```
