@@ -40,12 +40,7 @@ export function useValidatedInput<T extends any = number>(
     return [result.value, result.status];
   }, [input, opts?.parse, opts?.pattern, opts?.validate]);
 
-  const status =
-    value !== null
-      ? opts?.undefinedStatusOnSuccess
-        ? undefined
-        : InputStatus.Success
-      : InputStatus.Error;
+  const status = value !== null ? InputStatus.Success : InputStatus.Error;
 
   return [value, input, setInput, status, statusReason];
 }
@@ -57,7 +52,6 @@ export interface Options<T> {
   // TODO: allow return type of just boolean
   /** optional postparse value tester */
   validate?: (value: T) => { valid: boolean; status?: string };
-  undefinedStatusOnSuccess?: boolean;
 }
 
 // type used when user passes no custom options
@@ -66,7 +60,6 @@ export interface DefaultOptions {
   /** optional preparse RegExp tester, rejects with "invalid format" */
   pattern?: RegExp;
   validate?: (value: number) => { valid: boolean; status?: string };
-  undefinedStatusOnSuccess?: boolean;
 }
 
 export enum InputStatus {
