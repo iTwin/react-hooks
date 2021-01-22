@@ -58,6 +58,18 @@ Generic React hooks for daily development.
 - **useInlineComponent**: for tiny components
 - **useOnMount**: for directly saying you're doing something is first added to the dom
 - **useOnUnmount**: for directly saying you're doing something when the component is removed from the dom
+- **useOnExternalClick**: A callback to fire on external clicks. Great for closing popups
+  ```tsx
+  const [isOpen, setIsOpen] = useState(true);
+  const popupElemRef = useRef<HTMLDivElement>(null);
+  useOnExternalClick(popupElemRef, () => setIsOpen(false)) // close popup if user clicks outside of it
+  return (
+    <div>
+      <Toolbar />
+      {isOpen && <div ref={popupElemRef}><UserPopup /></div>}
+    </div>
+  );
+  ```
 
 ## Tips
 
