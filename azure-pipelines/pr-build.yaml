@@ -1,7 +1,7 @@
-# PR build
+# PR CI pipeline
 
-pool:
-  vmImage: 'ubuntu-latest'
+# only trigger on PRs
+trigger: none
 
 pr:
   drafts: false
@@ -9,6 +9,9 @@ pr:
     include:
     - master
     - release/*
+
+pool:
+  vmImage: 'ubuntu-latest'
 
 steps:
 - checkout: self
