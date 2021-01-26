@@ -2,6 +2,7 @@
   "name": "@bentley/react-hooks",
   "version": "1.0.0",
   "description": "commonly reused generic react hooks for your react applications",
+  "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -b",
