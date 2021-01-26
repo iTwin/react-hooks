@@ -5,7 +5,7 @@ trigger:
 - release/*
 
 pool:
-  name: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 pr:
   drafts: false
