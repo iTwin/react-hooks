@@ -2,7 +2,7 @@ trigger:
 - release/*
 
 pool:
-  name: iModelTechCI
+  name: ubuntu-latest
 
 steps:
 - checkout: self
@@ -12,14 +12,10 @@ steps:
   inputs:
     versionSpec: "10.16.x"
     checkLatest: true
-- task: npmAuthenticate@0
-  inputs:
-    workingFile: .npmrc
 - script: npm install
   displayName: 'install package source and devDeps'
 - script: npm run build
   displayName: 'build bundle'
-# TODO: verify that broken tests will not publish
 - script: npm test
   displayName: 'run tests'
 - script: npm publish
