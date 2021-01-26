@@ -1,9 +1,5 @@
 # PR build
 
-trigger:
-- master
-- release/*
-
 pool:
   vmImage: 'ubuntu-latest'
 
