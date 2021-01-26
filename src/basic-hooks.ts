@@ -51,6 +51,21 @@ export function useStable<T>(make: () => T): T {
   return useRef(value).current;
 }
 
+/** like useRef but takes a function to initialize the
+ * item instead of always computing it, useful when you want a
+ * ref to something that is expensive to initialize
+ */
+export function useExpensiveRef<T extends any>(
+  init: () => T
+): React.MutableRefObject<T> {
+  const initializedRef = useRef(false);
+  const initialized = initializedRef.current;
+  // doesn't matter what we pass to useRef after initialization
+  const ref = useRef(initialized ? undefined! : init());
+  initializedRef.current = true;
+  return ref;
+}
+
 /**
  * throws an error if the pass object changes its key shape between renders:
  *
