@@ -1,8 +1,5 @@
 # PR CI pipeline
 
-# only trigger on PRs
-trigger: none
-
 pr:
   drafts: false
   branches:
