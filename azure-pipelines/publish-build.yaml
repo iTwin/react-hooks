@@ -6,6 +6,8 @@ pr: none
 jobs:
 - deployment: 'DeployToNPMJs'
   environment: 'npmjs-(imodeljs-admin)'
+  variables:
+  - group: "Caleb - npmjs publish token"
   pool:
     vmImage: 'ubuntu-latest'
   strategy:
