@@ -20,5 +20,13 @@ steps:
   displayName: 'build bundle'
 - script: npm test
   displayName: 'run tests'
-- script: npm publish
+- script: |
+    npm config set @bentley:registry https://registry.npmjs.org
+    npm config set //registry.npmjs.org/:_authToken $(npmToken)
+    npm config set //registry.npmjs.org/:email 'imodel.js@gmail.com'
+    npm config set //registry.npmjs.org/:username 'imodeljs'
+  displayName: 'configure npm'
+- script: npm publish --access public
   displayName: 'publish'
+
+
