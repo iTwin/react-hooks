@@ -3,30 +3,35 @@
 trigger: none
 pr: none
 
-pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-- checkout: self
-  clean: true
-- task: NodeTool@0
-  displayName: "install Node 10.16.x"
-  inputs:
-    versionSpec: "10.16.x"
-    checkLatest: true
-- script: npm install
-  displayName: 'install package source and devDeps'
-- script: npm run build
-  displayName: 'build bundle'
-- script: npm test
-  displayName: 'run tests'
-- script: |
-    npm config set @bentley:registry https://registry.npmjs.org
-    npm config set //registry.npmjs.org/:_authToken $(npmToken)
-    npm config set //registry.npmjs.org/:email 'imodel.js@gmail.com'
-    npm config set //registry.npmjs.org/:username 'imodeljs'
-  displayName: 'configure npm'
-- script: npm publish --access public
-  displayName: 'publish'
-
-
+jobs:
+- deployment: 'DeployToNPMJs'
+  environment: 'npmjs-(imodeljs-admin)'
+  variables:
+  - group: "Caleb - npmjs publish token"
+  pool:
+    vmImage: 'ubuntu-latest'
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - checkout: self
+          clean: true
+        - task: NodeTool@0
+          displayName: "install Node 10.16.x"
+          inputs:
+            versionSpec: "10.16.x"
+            checkLatest: true
+        - script: npm install
+          displayName: 'install package source and devDeps'
+        - script: npm run build
+          displayName: 'build bundle'
+        - script: npm test
+          displayName: 'run tests'
+        - script: |
+            npm config set @bentley:registry https://registry.npmjs.org
+            npm config set //registry.npmjs.org/:_authToken $(npmToken)
+            npm config set //registry.npmjs.org/:email 'imodel.js@gmail.com'
+            npm config set //registry.npmjs.org/:username 'imodeljs'
+          displayName: 'configure npm'
+        - script: npm publish --access public
+          displayName: 'publish'
