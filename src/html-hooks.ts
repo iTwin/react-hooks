@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import React from "react";
 
 /**
@@ -33,39 +33,45 @@ export const useMediaQuery = (query: string): boolean => {
  */
 export const useScrolling = (scrollable: HTMLElement | undefined | null) => {
   const [scrolling, setScrolling] = React.useState(false);
-  let touchStartCount = 0;
 
   React.useEffect(() => {
+    let touching = false;
     let timer: NodeJS.Timeout | undefined;
-    const listener = () => {
+
+    const scrollHandler = () => {
       if (timer) {
         clearTimeout(timer);
       }
       setScrolling(true);
-      if (touchStartCount === 0) {
-        // If touchStartCount is 0, the user initiated scrolling using an attached pointing device (mouse or trackpad).
+      if (!touching) {
+        // If not touching, the user initiated scrolling using an attached pointing device (mouse or trackpad).
         timer = setTimeout(() => setScrolling(false), 250);
       }
     };
-    if (scrollable) {
-      scrollable.ontouchstart = () => {
-        ++touchStartCount;
-      };
-      scrollable.ontouchend = () => {
-        --touchStartCount;
-        if (touchStartCount === 0) {
-          setScrolling(false);
-        }
-      };
-      scrollable.addEventListener("scroll", listener);
-    }
-    return () => {
-      if (scrollable) {
-        scrollable.removeEventListener("scroll", listener);
-        scrollable.onmousedown = null;
-        scrollable.onmouseup = null;
+
+    const touchStartHandler = () => {
+      touching = true;
+    };
+
+    const touchEndHandler = (ev: TouchEvent) => {
+      touching = ev.touches.length !== 0;
+      if (!touching) {
+        setScrolling(false);
       }
     };
-  }, [scrollable, touchStartCount]);
+
+    if (scrollable) {
+      scrollable.addEventListener("scroll", scrollHandler);
+      // these events are intentionally only for touch as drag scrolling isn't done with the mouse or trackpad
+      scrollable.addEventListener("touchstart", touchStartHandler);
+      scrollable.addEventListener("touchend", touchEndHandler);
+
+      return () => {
+        scrollable.removeEventListener("scroll", scrollHandler);
+        scrollable.removeEventListener("touchstart", touchStartHandler);
+        scrollable.removeEventListener("touchend", touchEndHandler);
+      };
+    }
+  }, [scrollable]);
   return scrolling;
 };
