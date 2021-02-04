@@ -65,15 +65,13 @@ export const useScrolling = (scrollable: HTMLElement | undefined | null) => {
       // these events are intentionally only for touch as drag scrolling isn't done with the mouse or trackpad
       scrollable.addEventListener("touchstart", touchStartHandler);
       scrollable.addEventListener("touchend", touchEndHandler);
-    }
 
-    return () => {
-      if (scrollable) {
+      return () => {
         scrollable.removeEventListener("scroll", scrollHandler);
         scrollable.removeEventListener("touchstart", touchStartHandler);
         scrollable.removeEventListener("touchend", touchEndHandler);
-      }
-    };
+      };
+    }
   }, [scrollable]);
   return scrolling;
 };
