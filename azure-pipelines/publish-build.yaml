@@ -21,7 +21,7 @@ jobs:
           inputs:
             versionSpec: "10.16.x"
             checkLatest: true
-        - script: npm install
+        - script: npm ci
           displayName: 'install package source and devDeps'
         - script: npm run build
           displayName: 'build bundle'
