@@ -1,6 +1,6 @@
 {
   "name": "@bentley/react-hooks",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "commonly reused generic react hooks for your react applications",
   "license": "MIT",
   "main": "lib/index.js",
@@ -51,9 +51,12 @@
     }
   },
   "lint-staged": {
-    "*.{js,json,jsx,ts,tsx,md}": [
+    "*.{js,jsx,ts,tsx}": [
       "prettier --write",
       "eslint --fix --config './.eslintrc.autofix.jsonc'"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
     ]
   }
 }
