@@ -51,9 +51,12 @@
     }
   },
   "lint-staged": {
-    "*.{js,json,jsx,ts,tsx,md}": [
+    "*.{js,jsx,ts,tsx}": [
       "prettier --write",
       "eslint --fix --config './.eslintrc.autofix.jsonc'"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
     ]
   }
 }
