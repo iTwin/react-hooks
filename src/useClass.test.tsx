@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { act, render } from "@testing-library/react";
 
 import useClass from "./useClass";
@@ -34,11 +34,13 @@ describe("useClass()", () => {
         { a }
       );
 
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      const instance = useMemo(() => new Derived(), []);
+
       expect(Object.getPrototypeOf(Derived)).toStrictEqual(Base);
       if (LastDerived) expect(LastDerived).toStrictEqual(Derived);
+      expect(instance).toBeInstanceOf(Derived);
       LastDerived = Derived;
-
-      const instance = new Derived();
 
       return <span data-testid="result">{instance.f()}</span>;
     }) as React.FC;
