@@ -47,8 +47,8 @@ describe("useAsyncInterval()", () => {
       expect(effect).toBeCalledTimes(1);
     });
     function TestComp() {
-      void useAsyncInterval(async ({ setCanceller }) => {
-        setCanceller(cancel);
+      void useAsyncInterval(async ({ setPerformCancel }) => {
+        setPerformCancel(cancel);
         await effect();
       }, TINY_INTERVAL);
       return null;

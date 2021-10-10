@@ -24,9 +24,9 @@ type CancellationFunc = () => void;
  * ).catch((boom) => {})
  *
  * @example
- * useAsyncEffect(async ({setCanceller}) => {
+ * useAsyncEffect(async ({setPerformCancel}) => {
  *   const req = axios.get<Resp>(url, {
- *     cancelToken: new axios.CancelToken(setCanceller) // works well with axios
+ *     cancelToken: new axios.CancelToken(setPerformCancel) // works well with axios
  *   });
  *   await req;
  * }, [url]);
@@ -44,9 +44,9 @@ type CancellationFunc = () => void;
 export function useAsyncEffect<T extends Promise<void> | void>(
   effect: (util: {
     isStale: () => boolean;
-    /** @deprecated perfer setCanceller, the name is more intuitive */
+    /** @deprecated prefer setPerformCancel, the name is more intuitive */
     setCancel: (cancel: CancellationFunc) => void;
-    setCanceller: (cancel: CancellationFunc) => void;
+    setPerformCancel: (cancel: CancellationFunc) => void;
   }) => T,
   deps?: React.DependencyList
 ): T extends Promise<void> ? Promise<void> : void {
@@ -59,13 +59,13 @@ export function useAsyncEffect<T extends Promise<void> | void>(
     useEffect(() => {
       let isStale = false;
       let onCancel: CancellationFunc | undefined;
-      const setCanceller = (inCancelFunc: CancellationFunc) => {
+      const setPerformCancel = (inCancelFunc: CancellationFunc) => {
         onCancel = inCancelFunc;
       };
       const result = effect({
         isStale: () => isStale,
-        setCanceller,
-        setCancel: setCanceller,
+        setPerformCancel,
+        setCancel: setPerformCancel,
       });
       const isPromise = (a: any): a is Promise<void> => a !== undefined;
       if (isPromise(result)) {

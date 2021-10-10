@@ -20,36 +20,36 @@ type CancellationFunc = () => void;
  * exit after a cancellation (i.e. after axios.isCancel)
  *
  * @example
- * useAsyncInterval(async ({setCanceller}) => {
+ * useAsyncInterval(async ({setPerformCancel}) => {
  *   const resp = await axios.get<Resp>(pollEndpointUrl, {
- *     cancelToken: new axios.CancelToken(setCanceller) // works well with axios
+ *     cancelToken: new axios.CancelToken(setPerformCancel) // works well with axios
  *   });
  * }, 1000);
  */
 export function useAsyncInterval(
   effect: (util: {
     isStale: () => boolean;
-    /** @deprecated perfer setCanceller, the name is more intuitive */
+    /** @deprecated perfer setPerformCancel, the name is more intuitive */
     setCancel: (cancel: CancellationFunc) => void;
-    setCanceller: (cancel: CancellationFunc) => void;
+    setPerformCancel: (cancel: CancellationFunc) => void;
   }) => Promise<void>,
   interval: number | null
 ): Promise<void>;
 export function useAsyncInterval(
   effect: (util: {
     isStale: () => boolean;
-    /** @deprecated perfer setCanceller, the name is more intuitive */
+    /** @deprecated perfer setPerformCancel, the name is more intuitive */
     setCancel: (cancel: CancellationFunc) => void;
-    setCanceller: (cancel: CancellationFunc) => void;
+    setPerformCancel: (cancel: CancellationFunc) => void;
   }) => void,
   interval: number | null
 ): void;
 export function useAsyncInterval(
   effect: (util: {
     isStale: () => boolean;
-    /** @deprecated perfer setCanceller, the name is more intuitive */
+    /** @deprecated perfer setPerformCancel, the name is more intuitive */
     setCancel: (cancel: CancellationFunc) => void;
-    setCanceller: (cancel: CancellationFunc) => void;
+    setPerformCancel: (cancel: CancellationFunc) => void;
   }) => void | Promise<void>,
   interval: number | null
 ): Promise<void> {
@@ -61,7 +61,7 @@ export function useAsyncInterval(
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useInterval(() => {
       lastCancel.current?.();
-      const setCanceller = (inCancelFunc: CancellationFunc) => {
+      const setPerformCancel = (inCancelFunc: CancellationFunc) => {
         lastCancel.current = () => {
           inCancelFunc();
           isStale.current = true;
@@ -69,8 +69,8 @@ export function useAsyncInterval(
       };
       const result = effect({
         isStale: () => isStale.current,
-        setCancel: setCanceller,
-        setCanceller,
+        setCancel: setPerformCancel,
+        setPerformCancel,
       });
       if (result) {
         result
