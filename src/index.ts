@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
 export {
   useOnMount,
@@ -12,6 +12,7 @@ export {
 export { makeContextWithProviderRequired } from "./context-utils";
 export { default as useAsyncEffect } from "./useAsyncEffect";
 export { default as useAsyncInterval } from "./useAsyncInterval";
+export { default as useClass } from "./useClass";
 export { default as useInlineComponent } from "./useInlineComponent";
 export { default as useInterval } from "./useInterval";
 export { default as useOnChange } from "./useOnChange";
