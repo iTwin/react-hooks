@@ -1,6 +1,6 @@
 {
   "name": "@bentley/react-hooks",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "commonly reused generic react hooks for your react applications",
   "license": "MIT",
   "main": "lib/index.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/imodeljs/react-hooks"
+    "url": "https://github.com/iTwin/react-hooks"
   },
   "author": {
     "name": "Bentley Systems, Inc.",
