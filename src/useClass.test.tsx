@@ -62,4 +62,23 @@ describe("useClass()", () => {
 
     expect(TestComp).toHaveBeenCalledTimes(3);
   });
+
+  it("supports constructors with arguments and empty dependencies", async () => {
+    const TestComp = jest.fn(() => {
+      const Derived = useClass(
+        () =>
+          class Derived extends Base {
+            constructor(_arg1: string, ..._arg2: number[]) {
+              super();
+            }
+          }
+      );
+
+      const _instance = useMemo(() => new Derived("yup"), [Derived]);
+
+      return <span data-testid="result"></span>;
+    }) as React.FC;
+
+    render(<TestComp />);
+  });
 });

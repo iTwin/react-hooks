@@ -26,9 +26,9 @@ import { useRef } from "react";
  *
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function useClass<C extends new () => any, S extends {}>(
+export function useClass<C extends new (...args: any[]) => any, S extends {}>(
   makeClass: (s: S) => C,
-  dependencies: S
+  dependencies: S = {} as S
 ): C {
   const stateRef = useRef({} as S).current;
   Object.assign(stateRef, dependencies);

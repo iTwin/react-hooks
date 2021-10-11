@@ -8,7 +8,7 @@ import { render } from "@testing-library/react";
 
 import useAsyncEffect from "./useAsyncEffect";
 
-type Equals<T, U> = T extends U ? (U extends T ? true : false) : false;
+export type Equals<T, U> = T extends U ? (U extends T ? true : false) : false;
 
 describe("useAsyncEffect()", () => {
   // type smoke tests
