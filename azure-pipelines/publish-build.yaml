@@ -1,37 +1,31 @@
 # publish pipeline
 
-trigger: none
-pr: none
+trigger:
+- release/*
 
-jobs:
-- deployment: 'DeployToNPMJs'
-  environment: 'npmjs-(imodeljs-admin)'
-  variables:
-  - group: "Caleb - npmjs publish token"
-  pool:
-    vmImage: 'ubuntu-latest'
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - checkout: self
-          clean: true
-        - task: NodeTool@0
-          displayName: "install Node 10.16.x"
-          inputs:
-            versionSpec: "10.16.x"
-            checkLatest: true
-        - script: npm ci
-          displayName: 'install package source and devDeps'
-        - script: npm run build
-          displayName: 'build bundle'
-        - script: npm test
-          displayName: 'run tests'
-        - script: |
-            npm config set @bentley:registry https://registry.npmjs.org
-            npm config set //registry.npmjs.org/:_authToken $(npmToken)
-            npm config set //registry.npmjs.org/:email 'imodel.js@gmail.com'
-            npm config set //registry.npmjs.org/:username 'imodeljs'
-          displayName: 'configure npm'
-        - script: npm publish --access public
-          displayName: 'publish'
+pool:
+  name: iModelTechCI
+
+steps:
+- task: NodeTool@0
+  displayName: "install Node 16.14.x"
+  inputs:
+    versionSpec: "16.14.x"
+    checkLatest: true
+
+- task: npmAuthenticate@0
+  inputs:
+    workingFile: .npmrc
+
+- script: npm install --production
+  displayName: 'install package dependencies'
+
+- script: npm install --save-dev webpack webpack-cli
+  displayName: install packages required to perform build
+
+- script: npm run build:bundle
+  displayName: build bundle
+
+- script: npm publish
+  displayName: publish
+
